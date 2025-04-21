@@ -1,28 +1,42 @@
 import skimage as ski
 import numpy.typing as npt
+import numpy as np
+import concurrent.futures
 
-LEVELS = """ .'`^",:;Il!i><~+_-?][}{1)(|\\/tfjrxnuvczXYUJCLQ0OZmwqpdbkhao*#MW&8%B@$"""
+LEVELS = np.array(list(""" .'`^",:;Il!i><~+_-?][}{1)(|\\/tfjrxnuvczXYUJCLQ0OZmwqpdbkhao*#MW&8%B@$"""))
 NUM_LEVELS = len(LEVELS)
 
-def get_level_char(intensity: float):
-    level_index = round(intensity * NUM_LEVELS) - 1
+def _process_row_gs(img_row):
+    indices = np.round(img_row * NUM_LEVELS).astype(int) - 1
+    char_row = LEVELS[indices]
 
-    return  LEVELS[level_index]
+    return "".join(char_row)
+
+def _process_row_rgb(img_row, rgb_row):
+    indices = np.round(img_row * NUM_LEVELS).astype(int) - 1
+    char_row = LEVELS[indices]
+
+    line = []
+    for char, (r, g, b) in zip(char_row, rgb_row):
+        line.append(f"\x1b[38;2;{r};{g};{b}m{char}\x1b[0m")
+
+    return "".join(line)
 
 def convertGS(image: npt.NDArray, output_file='output.txt', out_dim=(256,256)):
     block_image = ski.transform.resize(image, out_dim, anti_aliasing=True)
-
     h, w = block_image.shape
 
-    with open(output_file, 'w') as f:
-        for i in range(h):
-            line = []
+    lines = [None] * h
+    with concurrent.futures.ProcessPoolExecutor() as executor:
+        future_to_row = {executor.submit(_process_row_gs, block_image[i]): i for i in range(h)}
 
-            for j in range(w):
-                line.append(get_level_char(block_image[i][j]))
+        for future in concurrent.futures.as_completed(future_to_row):
+            row_index = future_to_row[future]
+            lines[row_index] = future.result()
 
-            line.append("\n")
-            f.write("".join(line))
+    with open(output_file, 'w', encoding="utf-8") as f:
+        for line in lines:
+            f.write(f"{line}\n")
 
 def convertRGB(image: npt.NDArray, output_file='output.txt', out_dim=(256, 256)):
     block_image = ski.transform.resize(image, out_dim, anti_aliasing=True)
@@ -32,14 +46,14 @@ def convertRGB(image: npt.NDArray, output_file='output.txt', out_dim=(256, 256))
 
     h, w, _ = block_image.shape
 
+    lines = [None] * h
+    with concurrent.futures.ProcessPoolExecutor() as executor:
+        future_to_row = {executor.submit(_process_row_rgb, gsBI[i], block_image[i]): i for i in range(h)}
+
+        for future in concurrent.futures.as_completed(future_to_row):
+            row_index = future_to_row[future]
+            lines[row_index] = future.result()
+
     with open(output_file, 'w') as f:
-        for i in range(h):
-            line = []
-
-            for j in range(w):
-                r,g,b = block_image[i][j]
-
-                line.append(f"\x1b[38;2;{r};{g};{b}m{get_level_char(gsBI[i][j])}\x1b[0m")
-
-            line.append("\n")
-            f.write("".join(line))
+        for line in lines:
+            f.write(f"{line}\n")
