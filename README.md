@@ -1,7 +1,5 @@
 # Asciifier
 
-[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
-
 Converts images into their ASCII art representation directly in your terminal, with optional color support!
 
 Asciifier takes an image file, resizes it to your desired character dimensions, and maps pixel intensity (and optionally color) to ASCII characters and ANSI escape codes. It uses `scikit-image` for robust image handling and `concurrent.futures` for parallel processing to speed up the conversion of larger images.
