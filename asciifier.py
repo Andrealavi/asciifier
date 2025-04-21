@@ -116,7 +116,7 @@ def convert(image: npt.NDArray[Any], output_file: str, out_dim: Tuple[int, int] 
         for line in lines:
             f.write(f"{line}\n")
 
-if __name__ == "__main__":
+def main():
     # --- Command Line Argument Parsing ---
     parser: argparse.ArgumentParser = argparse.ArgumentParser(
         prog="Asciifier",
@@ -180,3 +180,6 @@ if __name__ == "__main__":
     except Exception as e:
         print("An unexpected error occurred:")
         print(e)
+
+if __name__ == "__main__":
+    main()
