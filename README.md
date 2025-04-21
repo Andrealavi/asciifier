@@ -115,7 +115,3 @@ Key dependencies include:
 *   `scikit-image`
 
 All dependencies are listed in `pyproject.toml` and are installed automatically when you run `pip install .`.
-
-## License
-
-This project is licensed under the MIT License - see the `LICENSE` file (you should create one with the MIT license text) for details.
