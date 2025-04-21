@@ -44,4 +44,4 @@ dependencies = [
 "Homepage" = "https://github.com/Andrealavi/asciifier"
 
 [project.scripts]
-asciifier = "asciifier.asciifier:main"
+asciifier = "asciifier:main"
