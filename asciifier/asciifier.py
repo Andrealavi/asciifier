@@ -138,9 +138,6 @@ def main():
         type=str
     )
 
-    # Note: The original code used type=bool and action=BooleanOptionalAction.
-    # BooleanOptionalAction is generally preferred as it creates --grayscale/--no-grayscale flags.
-    # Keeping original logic here. If grayscale is True, color is disabled later.
     parser.add_argument(
         "--grayscale",
         "-gs",
