@@ -87,21 +87,9 @@ Where `<filename>` is the path to the image you want to convert.
 
 ## Example Output
 
-**(Note:** ANSI color rendering depends on your terminal emulator's capabilities. Most modern terminals support it.)
+This example shows the usage of `asciifier` on the image given in the tests folder.
 
-**Grayscale Example (Conceptual):**
-
-```
-        %%%%%%
-    %%%%%%WWWW%%%%%%
-  %%%%WWWWWWWWWW%%%%
-%%%%WWWWWWWWWWWWWW%%%%
-%%%%WWWWWWWWWWWWWW%%%%
-%%%%WWWWWWWWWWWWWW%%%%
-  %%%%WWWWWWWWWW%%%%
-    %%%%%%WWWW%%%%%%
-        %%%%%%
-```
+![alt_text](./readme_images/bird_screenshot_grayscale.png)
 
 **Color Output Screenshot:**
 
